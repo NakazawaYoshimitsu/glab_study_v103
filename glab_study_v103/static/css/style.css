@@ -1,0 +1,95 @@
+/*----------------------------------------------*/
+/* スタイルのリセット								*/
+/*----------------------------------------------*/
+* {
+    margin: 0;
+    padding: 0;
+    /*color: #333333;*/
+}
+/*
+body , html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+*/
+
+/*----------------------------------------------*/
+/* ヘッダー										*/
+/*----------------------------------------------*/
+#header {
+    margin: -19px 0px 0px 0px;
+    width: 100%;
+    height: 50px;
+    background-color: #ffff88;
+    text-indent: 14px;
+}
+#headtitle {
+    padding: 8px 0px 0px 30px;
+    font-family: Garamond;
+    font-size: x-large;
+    color: #333333;
+}
+
+/*----------------------------------------------*/
+/* コンテンツ									*/
+/*----------------------------------------------*/
+#container {
+    width: 100%;
+    position: relative;
+    height: auto !important;
+    height: 100%;
+    min-height: 100%;
+    margin-top: 20px;
+}
+#submenu {
+	width: 16%;
+	display: inline;
+	float: left;
+    text-indent: 14px;
+}
+#contents {
+    width: 70%;
+	/*float: right;*/
+	float: left;
+    border-left: 1px #c0c0c0 solid;
+    text-indent: 14px;
+}
+#content {
+    width: 80%;
+    margin: 30px auto;
+    padding: 20px;
+}
+/*
+#submenu {
+	float: left;
+    width: 18%;
+	display: inline;
+}
+#submenu1 {
+    padding: 10px 10px 10px 10px;
+}
+#contents {
+    width: 80%;
+	float: right;
+    border-left: 1px #c0c0c0 solid;
+}
+#contents1 {
+    padding: 10px 10px 10px 10px;
+}
+*/
+
+/*----------------------------------------------*/
+/* フッター										*/
+/*----------------------------------------------*/
+#footer {
+    /*position: fixed;*/
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    padding: 14px 0px 0px 30px;
+    background-color: #777777;
+    font-family: Garamond;
+    color: #cccccc;
+}
+
