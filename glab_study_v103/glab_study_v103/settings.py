@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrapform',                    # django-bootstrap-form
+    'accounts',                         # accounts APL(login/logout)
+    'top',                              # top APL
     'bihin',                            # Bihin APL
 ]
 
@@ -128,4 +130,9 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
+# ログインしていない場合に表示するURL(ログイン画面)
+LOGIN_URL = '/login/'
+# ログイン時のredirect先
+LOGIN_REDIRECT_URL = '/top/'
 

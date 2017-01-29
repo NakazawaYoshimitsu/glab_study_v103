@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GeekLab XXX 管理システム</title>
+</head>
+<body>
+  <div style="background:#99CC99; margin: -8px -8px 0px -8px;">
+    <table>
+      <tr>
+        <td width=400px align="left"><font size="+1" color="#FFFFFF">GeekLab XXX 管理システム</font></td>
+        {% if user.is_authenticated %}
+        <td width=400px align="right">ようこそ {{ user.get_username }} さん .  </td>
+        <td width=400px align="left"><a href="/logout/">ログアウト</td>
+        {% else %}
+        <td width=400px align="write">ようこそi</td>
+        <td width=400px align="left">ログイン</td>
+        {% endif %}
+      </tr>
+    </table>
+  </div>
+    {% if user.is_authenticated %}
+        <p>ようこそ {{ user.get_username }} さん！.</p>
+    {% else %}
+        <p>知らない人</p>
+    {% endif %}
+  <table>
+    <tr><td>メニュー</td></tr>
+    <tr><td><a href="/cms/book/">書籍</a></td></tr>
+    <tr><td>感想</td></tr>
+  </table>
+</body>
+</html>
+

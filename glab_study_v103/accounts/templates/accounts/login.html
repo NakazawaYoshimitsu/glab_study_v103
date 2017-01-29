@@ -1,0 +1,39 @@
+{% extends 'base.html' %} 
+
+{% block content %} 
+
+  <!-- ヘッダー -->
+  <div id="header">
+    <div id="headtitle">GLN.Study　<small><small>- Login -</small></small></div>
+  </div>
+
+  <!-- Login -->
+  <div id="form">
+    <div id="formtitle">GLN.Study</div>
+    <hr>
+
+    <!--<div class="container">-->
+    <form method="post" action='{% url 'django.contrib.auth.views.login' %}'>
+      {% csrf_token %}
+      <div class="form-item">
+        <label for="id_username"><small>User ID</small></label>
+        {{ form.username }}
+        {{ form.username.errors }}
+      </div>
+      <div class="form-item">
+        <label for="id_password"><small>Password</small></label>
+        {{ form.password }}
+        {{ form.password.errors }}  
+      </div>
+      <div class="button-panel">
+        <input type='submit' class="button" value='login' />
+        <input type='hidden' name='next' value='{{ next }}' />
+      </div>
+      <div class="form-footer">
+      </div>
+    </form>
+    <!--</div>-->
+  </div>
+
+{% endblock %}
+

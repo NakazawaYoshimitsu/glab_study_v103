@@ -23,7 +23,7 @@ SHISAN_CHOICES = (
     (1, 'リース' )
 )
 STATUS_CHOICES = (
-    (0, '保管棚'),
+    (0, '保管中'),
     (1, '貸出中'),
     (2, '廃棄'),
 )
@@ -44,6 +44,7 @@ class Bihin(models.Model):
     bihin_mem = models.CharField('メモリ', max_length=255)
     bihin_mediadrv = models.CharField('メディアドライブ', blank=True, max_length=255)
     bihin_shisan = models.IntegerField('資産', choices=SHISAN_CHOICES)
+    bihin_text = models.TextField('備考', blank=True, null=True)
 
     def __str__(self):
         return self.bihin_no
@@ -51,7 +52,8 @@ class Bihin(models.Model):
 
 class Userinfo(models.Model):
     """使用者情報"""
-    bihin = models.ForeignKey(Bihin,verbose_name='使用者情報', related_name='userinfo')
+    bihin = models.OneToOneField(Bihin, primary_key=True, related_name='userinfo')
+    status = models.IntegerField('状態', choices=STATUS_CHOICES)
     user = models.CharField('使用者', max_length=255)
     prj = models.CharField('使用プロジェクト', blank=True, max_length=255)
     location = models.CharField('保管場所', blank=True, max_length=255)
@@ -62,7 +64,7 @@ class Userinfo(models.Model):
 
 class Display(models.Model):
     """機器(Display)"""
-    bihin = models.ForeignKey(Bihin, verbose_name='機器(Display)', related_name='display')
+    bihin = models.OneToOneField(Bihin, primary_key=True, related_name='display')
     dispsize = models.CharField('付属品：ディスプレイ(size)', blank=True, max_length=255)
     dispno = models.CharField('付属品：ディスプレイ(管理No)', blank=True, unique=True, max_length=255)
 
@@ -72,7 +74,7 @@ class Display(models.Model):
 
 class Mouse(models.Model):
     """機器(Mouse)"""
-    bihin = models.ForeignKey(Bihin, verbose_name='機器(Mouse)', related_name='mouse')
+    bihin = models.OneToOneField(Bihin, primary_key=True, related_name='mouse')
     mouseno = models.CharField('付属品：マウス(管理No)', blank=True, unique=True, max_length=255)
 
     def __str__(self):
@@ -81,7 +83,7 @@ class Mouse(models.Model):
 
 class Keybord(models.Model):
     """機器(Keyboard)"""
-    bihin = models.ForeignKey(Bihin, verbose_name='機器(Keyboard)', related_name='keyboard')
+    bihin = models.OneToOneField(Bihin, primary_key=True, related_name='keyboard')
     keybordno = models.CharField('付属品：キーボード(管理No)', blank=True, unique=True, max_length=255)
 
     def __str__(self):
@@ -90,7 +92,7 @@ class Keybord(models.Model):
 
 class Lease(models.Model):
     """リース情報"""
-    bihin = models.ForeignKey(Bihin, verbose_name='リース情報', related_name='lease')
+    bihin = models.OneToOneField(Bihin, primary_key=True, related_name='lease')
     lease_date = models.DateField('リース期限日', null=True, blank=True, help_text='<small><small>ex.) 2016-09-12</small></small>')
 
     def __str__(self):

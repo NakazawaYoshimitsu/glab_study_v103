@@ -18,6 +18,13 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-#    url(r'^top/', include('top.urls', namespace='top')),
+    url(r'^top/', include('top.urls', namespace='top')),
+    url(r'^login/', 'django.contrib.auth.views.login',
+        {'template_name': 'accounts/login.html'}),
+    url(r'^accounts/login/', 'django.contrib.auth.views.login',
+        {'template_name': 'accounts/login.html'}),
+    url(r'^logout/', 'django.contrib.auth.views.logout',
+        {'template_name': 'accounts/logout.html'}),
+    url(r'^accounts/profile/', include('top.urls', namespace='top')),
     url(r'^bihin/', include('bihin.urls', namespace='bihin')),
 ]
