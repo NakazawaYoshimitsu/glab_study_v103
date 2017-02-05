@@ -2,6 +2,38 @@
 {% load bootstrap %}
 {% block content %}
 
+{% block extrahead %}
+<!-- dispsizeが入力されたら管理番号を入力できるようにする -->
+<script>
+    $(function() {
+        $('#id_dispsize').blur(function(e) {
+            if($(this).val() != ""){
+                $('#id_dispno').attr('readonly', false);
+            } else {
+                $('#id_dispno').val("");
+                $('#id_dispno').attr('readonly', true);
+            }
+        });
+        $('#id_dispsize').trigger('blur');
+    });
+</script>
+<!-- 備品資産がリースの時はリース期限を入力できるようにする -->
+<script>
+    $(function() {
+        $('#id_bihin_shisan').blur(function(e) {
+            if($(this).val() == "1" ) {
+                $('#id_lease_date').attr('readonly', false);
+            } else {
+                $('#id_lease_date').val("");
+                $('#id_lease_date').attr('readonly', true);
+            }
+        });
+        $('#id_bihin_shisan').trigger('blur');
+    });
+</script>
+{% endblock extrahead %}
+
+
   <!-- ヘッダー -->
   <div id="header">
     {% if bihin_id %}
@@ -13,84 +45,42 @@
 
   <!-- コンテナ -->
   <div class="container">
-  <div id="container">
-    <!--<h3 class="page-header">備品の編集</h3>-->
-    {% if bihin_id %}
-      <form action="{% url 'bihin:bihin_mod' bihin_id=bihin_id %}" method="post" class="form-horizontal" role="form">
-    {% else %}
-      <form action="{% url 'bihin:bihin_add' %}" method="post" class="form-horizontal" role="form">
-    {% endif %}
+    <div id="container">
+      <!--<h3 class="page-header">備品の編集</h3>-->
+      {% if bihin_id %}
+        <form action="{% url 'bihin:bihin_mod' bihin_id=bihin_id %}" method="post" class="form-horizontal" role="form">
+      {% else %}
+        <form action="{% url 'bihin:bihin_add' %}" method="post" class="form-horizontal" role="form">
+      {% endif %}
         {% csrf_token %}
         <div class="form-group form-group-sm">
-        {{ bihin_form|bootstrap_horizontal:'col-xs-3 col-xs-6' }}
-        {{ userinfo_form|bootstrap_horizontal:'col-xs-3 col-xs-6' }}
-        {{ display_form|bootstrap_horizontal:'col-xs-3 col-xs-6' }}
-        {{ mouse_form|bootstrap_horizontal:'col-xs-3 col-xs-6' }}
-        {{ keybord_form|bootstrap_horizontal:'col-xs-3 col-xs-6' }}
-        {{ lease_form|bootstrap_horizontal:'col-xs-3 col-xs-6' }}
+          {{ bihin_form|bootstrap_horizontal:'col-xs-3 col-xs-6' }}
+          {{ userinfo_form|bootstrap_horizontal:'col-xs-3 col-xs-6' }}
+          {{ display_form|bootstrap_horizontal:'col-xs-3 col-xs-6' }}
+          {{ mouse_form|bootstrap_horizontal:'col-xs-3 col-xs-6' }}
+          {{ keybord_form|bootstrap_horizontal:'col-xs-3 col-xs-6' }}
+          {{ lease_form|bootstrap_horizontal:'col-xs-3 col-xs-6' }}
         <div class="form-group">
           <div class="col-sm-offset-2 col-sm-10">
             {% if user.is_staff %}
-            <button type="submit" class="btn btn-danger btn-sm">登録</button>
+              {% if bihin_id %}
+              <button type="submit" class="btn btn-info btn-sm">変更</button>
+              {% else %}
+              <button type="submit" class="btn btn-info btn-sm">登録</button>
+              {% endif %}
+            {% endif %}
+            {% if user.is_staff %}
+              {% if bihin_id %}
+                <a href="{% url 'bihin:bihin_del' bihin_id=bihin_id %}" class="btn btn-danger btn-sm">削除</a>
+              {% endif %}
             {% endif %}
             <a href="{% url 'bihin:bihin_top' %}" class="btn btn-default btn-sm">戻る</a>
           </div>
         </div>
         </div>
       </form>
-  </div>
+    </div>
   </div>
 
-  <!-- bootstrap で表示してみる -->
-<!--
-  <br><br><br>
-        下のようなフォームにしたいのですが残念ながら現状は動きません。<br>
-        仕方がないので、現状は上の形で動かすことにします。<br>
-  <div class="container">
-    <br><br>
-    {% if bihin_id %}
-      <form action="{% url 'bihin:bihin_mod' bihin_id=bihin_id %}" method="post" class="form-horizontal" role="form">
-    {% else %}
-      <form action="{% url 'bihin:bihin_add' %}" method="post" class="form-horizontal" role="form">
-    {% endif %}
-      {% csrf_token %}
-      <form class="form-horizontal">
-        <div class="form-group form-group-sm">
-          <label class="control-label col-xs-2">管理No</label>
-          <div class="col-xs-5">
-            <input type="text" name="name" class="form-control" placeholder={{ bihin.bihin_no }}>
-            <small><small><span id="helpBlock" class="help-block">ex.) JSL.NT.012345</span></small></small>
-          </div>
-        </div>
-        <div class="form-group form-group-sm">
-          <label class="control-label col-xs-2">名称</label>
-          <div class="col-xs-5">
-            <input type="text" name="name" class="form-control" placeholder={{ bihin.bihin_name }}>
-            <small><small><span id="helpBlock" class="help-block">ex.) MacBook Pro(13inc)</span></small></small>
-          </div>
-        </div>
-        <div class="form-group form-group-sm">
-          <label class="control-label col-xs-2">登録日</label>
-          <div class="col-xs-5">
-            <input type="date" name="name" class="form-control" placeholder={{ bihin.bihin_date }}>
-            <small><small><span id="helpBlock" class="help-block">ex.) 2016-09-03</span></small></small>
-          </div>
-        </div>
-        <div class="form-group form-group-sm">
-          <label class="control-label col-xs-2">備考</label>
-          <div class="col-xs-5">
-            <textarea class="form-control" rows="3"></textarea>
-          </div>
-        </div>
-        <div class="form-group form-group-sm">
-          <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-primary">登録</button>
-          </div>
-        </div>
-      </form>
-      </form>
-  </div>
-  aa
--->
 {% endblock content %}
 

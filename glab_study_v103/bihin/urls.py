@@ -18,5 +18,6 @@ urlpatterns = [
     url(r'^$', views.bihin_top, name='bihin_top'),								# /bihin		:備品一覧(Top)
     url(r'^add/$', views.bihin_edit, name='bihin_add'),							# /bihin/add	:登録
     url(r'^mod/(?P<bihin_id>\d+)/$', views.bihin_edit, name='bihin_mod'),		# /bihin/mod	:編集
+    url(r'^del/(?P<bihin_id>\d+)/$', views.bihin_del, name='bihin_del'),		# /bihin/del	:削除
 ]
 

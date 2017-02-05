@@ -29,7 +29,7 @@ def bihin_top(request):
 
 #-----------------------------------------------------------------------
 #	bihin_edit：
-#   urls.py の bihin_mod からここが起動される.
+#   urls.py の bihin_add/bihin_mod からここが起動される.
 #   ここでは備品DBを取得し、bihin_edit.htmlを動かす.
 #-----------------------------------------------------------------------
 @login_required
@@ -38,6 +38,7 @@ def bihin_edit(request, bihin_id=None):
 
     """備品の登録・編集"""
     if bihin_id:
+        print ( "bihin_edit id" )
         bihin = get_object_or_404(Bihin, pk=bihin_id)
 
         try:
@@ -65,7 +66,9 @@ def bihin_edit(request, bihin_id=None):
             lease = Lease.objects.get(pk=bihin_id)
         except Lease.DoesNotExist:
             lease = Lease()
+
     else:
+        print ( "bihin_edit new" )
         bihin = Bihin()
         userinfo = Userinfo()
         display = Display()
@@ -74,6 +77,7 @@ def bihin_edit(request, bihin_id=None):
         lease = Lease()
 
     if request.method == 'POST':
+        print ( "bihin_edit POST" )
         bihin_form = BihinForm(request.POST, instance=bihin)           # POST された request データからフォームを作成
         if bihin_form.is_valid():    # フォームのバリデーション
             display_form = DisplayForm(request.POST, instance=display)     # POST された request データからフォームを作成
@@ -85,29 +89,34 @@ def bihin_edit(request, bihin_id=None):
                         userinfo_form = UserinfoForm(request.POST, instance=userinfo)  # POST された request データからフォームを作成
                         if userinfo_form.is_valid():
                             lease_form = LeaseForm(request.POST, instance=lease)           # POST された request データからフォームを作成
+                            if lease_form.is_valid():
+                                bihin = bihin_form.save(commit=False)
+                                bihin.save()
 
-                            bihin = bihin_form.save(commit=False)
-                            bihin.save()
+                                userinfo = userinfo_form.save(commit=False)
+                                userinfo.save()
 
-                            userinfo = userinfo_form.save(commit=False)
-                            userinfo.save()
+                                if display.dispno:
+                                    display = display_form.save(commit=False)
+                                    display.bihin = bihin
+                                    display.save()
 
-                            if display.dispno:
-                                display = display_form.save(commit=False)
-                                display.save()
+                                if mouse.mouseno:
+                                    mouse = mouse_form.save(commit=False)
+                                    mouse.bihin = bihin
+                                    mouse.save()
 
-                            if mouse.mouseno:
-                                mouse = mouse_form.save(commit=False)
-                                mouse.save()
+                                if keybord.keybordno:
+                                    keybord = keybord_form.save(commit=False)
+                                    keybord.bihin = bihin
+                                    keybord.save()
 
-                            if keybord.keybordno:
-                                keybord = keybord_form.save(commit=False)
-                                keybord.save()
+                                if lease.lease_date:
+                                    lease = lease_form.save(commit=False)
+                                    lease.bihin = bihin
+                                    lease.save()
 
-                            lease = lease_form.save(commit=False)
-                            lease.save()
-
-                            return redirect('bihin:bihin_top')
+                                return redirect('bihin:bihin_top')
 
                         else:
                             lease_form = LeaseForm(instance=lease)
@@ -134,6 +143,7 @@ def bihin_edit(request, bihin_id=None):
             lease_form = LeaseForm(instance=lease)
 
     else:    # GET の時
+        print ( "bihin_edit get" )
         bihin_form = BihinForm(instance=bihin)
         userinfo_form = UserinfoForm(instance=userinfo)
         display_form = DisplayForm(instance=display)
@@ -152,5 +162,65 @@ def bihin_edit(request, bihin_id=None):
     }
 
     return render(request, 'bihin/bihin_edit.html', d)
+
+#-----------------------------------------------------------------------
+#	bihin_del：
+#   urls.py の bihin_del からここが起動される.
+#   ここでは備品DBを削除し、bihin.htmlに遷移する.
+#-----------------------------------------------------------------------
+@login_required
+def bihin_del(request, bihin_id=None):
+
+    print ( u"Debug:bihin_del(bihin_id)", bihin_id )
+
+    if bihin_id:
+
+        bihin = get_object_or_404(Bihin, pk=bihin_id)
+
+        try:
+            userinfo = Userinfo.objects.get(pk=bihin_id)
+        except Userinfo.DoesNotExist:
+            print ( "userinfo obj none" )
+        else:
+            userinfo.delete()
+            print ( "userinfo obj del" )
+
+        try:
+            display = Display.objects.get(pk=bihin_id)
+        except Display.DoesNotExist:
+            print ( "display obj none" )
+        else:
+            display.delete()
+            print ( "display obj del" )
+
+        try:
+            mouse = Mouse.objects.get(pk=bihin_id)
+        except Mouse.DoesNotExist:
+            print ( "mouse obj none" )
+        else:
+            mouse.delete()
+            print ( "mouse obj del" )
+
+        try:
+            keybord = Keybord.objects.get(pk=bihin_id)
+        except Keybord.DoesNotExist:
+            print ( "keybord obj none" )
+        else:
+            keybord.delete()
+            print ( "keybord obj del" )
+
+        try:
+            lease = Lease.objects.get(pk=bihin_id)
+        except Lease.DoesNotExist:
+            print ( "lease obj none" )
+        else:
+            lease.delete()
+            print ( "lease obj del" )
+
+        bihin.delete()
+
+    bihins = Bihin.objects.all().order_by('id')
+    return render(request, 'bihin/bihin.html', {'bihins':bihins})
+
 
 
